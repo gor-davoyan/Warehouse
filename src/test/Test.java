@@ -4,20 +4,40 @@ import exception.WarehouseException;
 import model.Material;
 import model.MaterialType;
 import observer.WarehouseObserver;
-import observerImpl.TestObserver;
 import warehouse.Warehouse;
 
 public class Test {
     public static void test1() {
-        MaterialType iron = new MaterialType("Iron", "asd", "aqwe", 1000);
-        MaterialType copper = new MaterialType("Copper", "sad", "gsda", 800);
+        MaterialType iron = new MaterialType("Iron", "foo", "ironIcon", 1000);
+        MaterialType copper = new MaterialType("Copper", "bar", "CopperIcon", 800);
 
         Warehouse warehouse1 = new Warehouse();
         Warehouse warehouse2 = new Warehouse();
 
-        WarehouseObserver testObserver = new TestObserver();
-        warehouse1.registerObserver(testObserver);
-        warehouse1.registerObserver(testObserver);
+        warehouse1.registerObserver(new WarehouseObserver() {
+
+            @Override
+            public void onMaterialAdded(Material material) {
+                System.out.println("warehouse1 add observer called");
+            }
+
+            @Override
+            public void onMaterialRemoved(Material material) {
+                System.out.println("warehouse1 remove observer called");
+            }
+        });
+        warehouse2.registerObserver(new WarehouseObserver() {
+
+            @Override
+            public void onMaterialAdded(Material material) {
+                System.out.println("warehouse2 add observer called");
+            }
+
+            @Override
+            public void onMaterialRemoved(Material material) {
+                System.out.println("warehouse2 remove observer called");
+            }
+        });
 
         Material ironMaterial = new Material(iron, 500);
         Material copperMaterial = new Material(copper, 700);
