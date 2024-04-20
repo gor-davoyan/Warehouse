@@ -59,7 +59,12 @@ public class Warehouse {
         }
 
         System.out.println(removeQuantity + " " + type.getName() + " was removed from " + this);
-        materials.put(type, currQuantity - removeQuantity);
+        // remove material from the map if quantity is 0
+        if (currQuantity - removeQuantity == 0) {
+            materials.remove(type);
+        } else {
+            materials.put(type, currQuantity - removeQuantity);
+        }
         notifyObserversOnMaterialRemoved(material);
     }
 
