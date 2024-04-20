@@ -34,6 +34,7 @@ public class Warehouse {
         int newQuantity = material.getQuantity();
         int availableCapacity = maxCapacity - currQuantity;
 
+        // if newQuantity is more than availableCapacity, will be added as much as possible
         if (newQuantity > availableCapacity) {
             System.out.println("Only " + availableCapacity + " " + type.getName() + " was added form " + newQuantity);
             newQuantity = availableCapacity;
@@ -52,6 +53,7 @@ public class Warehouse {
         int currQuantity = materials.getOrDefault(type, 0);
         int removeQuantity = material.getQuantity();
 
+        // if removeQuantity is more than currQuantity, will be thrown exception
         if (removeQuantity > currQuantity) {
             throw new WarehouseException("Not enough material");
         }
@@ -66,6 +68,8 @@ public class Warehouse {
 
         MaterialType type = material.getMaterialType();
         int destCurrQuantity = destination.materials.getOrDefault(type, 0);
+
+        // get the quantity of how much can be moved to not lose data while moving
         int quantityToMove = getQuantityToMove(material, type, destCurrQuantity);
 
         Material materialToMove = new Material(type, quantityToMove);
@@ -77,17 +81,20 @@ public class Warehouse {
     }
 
     public void printWarehouseData() {
+        StringBuilder sb = new StringBuilder();
+
         if (materials.isEmpty()) {
-            System.out.println("warehouse.Warehouse is empty");
-            return;
+            sb.append("Warehouse is empty");
+        } else {
+            for (Map.Entry<MaterialType, Integer> entry : materials.entrySet()) {
+                MaterialType type = entry.getKey();
+                int quantity = entry.getValue();
+                sb.append("Warehouse: ").append(this).append(", ")
+                        .append(type.getName()).append(": ").append(quantity).append("\n");
+            }
         }
 
-        for (Map.Entry<MaterialType, Integer> entry : materials.entrySet()) {
-            MaterialType type = entry.getKey();
-            int quantity = entry.getValue();
-            System.out.println("warehouse.Warehouse: " + this + ", " + type.getName() + ": " + quantity);
-        }
-        System.out.println("\n");
+        System.out.println(sb);
     }
 
     public void registerObserver(WarehouseObserver observer) {
